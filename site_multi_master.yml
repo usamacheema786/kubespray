@@ -1,11 +1,10 @@
 ---
-#- hosts: all
-#  roles:
-#    - common
-#    - hostname
-#  tags:
-#    - mariadb_cluster
-#    - update_app
+- hosts: all
+  roles:
+    - hostname
+  tags:
+    - mariadb_cluster
+    - update_app
 
 - hosts: k8s-cluster:etcd
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
