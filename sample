@@ -36,12 +36,12 @@ all:
 
     gluster:
       hosts:
-        node-01:
-        node-02:
-        node-03:
+        node1:
+        node2:
+        node3:
 
     galera_cluster:
       hosts:
-        node-01:
-        node-02:
-        node-03:
+        node1:
+        node2:
+        node3:
