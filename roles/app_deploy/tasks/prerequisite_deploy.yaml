@@ -1,0 +1,22 @@
+---
+
+- name: Create required dirs in gluster vol
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /mnt/gluster/logs/scheduler
+    - /mnt/gluster/logs/email_worker
+    - /mnt/gluster/logs/worker
+    - /mnt/gluster/logs/web
+    - /mnt/gluster/nginx
+  run_once: true
+
+- name: generate nginx config file
+  template:
+    src="nginx_external.conf.j2"
+    dest="/mnt/gluster/nginx/nginx.conf"
+    owner=root
+    group=root
+    mode=0644
+  run_once: true

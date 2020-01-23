@@ -1,0 +1,8 @@
+WEBDB_ENV_MYSQL_DB_HOST: "nginx"
+
+Site: "{{ hostvars[groups['doosra_vpc_k8s_cluster'][0]]['SITE'] }}"
+
+Vpcplus_link: "{{ hostvars[groups['doosra_vpc_k8s_cluster'][0]]['VPCPLUS_LINK'] }}"
+DOOSRA_VPC_MANIFEST: '/root/manifests'
+
+NGINX_TAG: "latest"

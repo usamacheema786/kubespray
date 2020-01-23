@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-common-configmap
+  namespace: doosra-vpc
+data:
+  RABBIT_ENV_RABBITMQ_USER: "guest"
+  RABBIT_ENV_RABBITMQ_PASSWORD: "guest"
+  FLASK_CONFIG: "production"
+  SECURE: "no"
+  SITE: ''
+  WEBDB_ENV_MYSQL_DB_HOST: 'nginx'
+  WEBDB_ENV_MYSQL_DATABASE: 'doosradb'
+  REDIS_PORT: "6379"
+  GENERATION: ''
+---

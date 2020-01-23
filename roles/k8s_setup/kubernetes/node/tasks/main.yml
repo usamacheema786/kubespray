@@ -1,0 +1,19 @@
+---
+- name: Reset Kubernetes component
+  shell: "kubeadm reset -f"
+  register: reset_cluster
+
+- name: Join to Kubernetes cluster
+  shell: |
+    kubeadm join --ignore-preflight-errors=all \
+                 --token {{ token }} \
+                 {{ hostvars[groups['k8s_master'][0]].ansible_ssh_host }}:6443 \
+                 --discovery-token-unsafe-skip-ca-verification
+  register: join_cluster
+
+- name: Enable and restart kubelet engine
+  service:
+    name: kubelet
+    state: restarted
+    enabled: yes
+  register: started_kubelet

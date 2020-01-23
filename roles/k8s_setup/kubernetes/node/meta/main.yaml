@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: k8s_setup/commons/os-checker }
+  - { role: k8s_setup/commons/pre-install , pkgs: ["kubelet", "kubeadm"] }

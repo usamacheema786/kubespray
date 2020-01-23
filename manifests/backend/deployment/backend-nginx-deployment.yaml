@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: doosra-vpc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: nginx
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name:  nginx
+        image: wancloudsinc/doosra-vpc-nginx:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          hostPort: 80
+        - containerPort: 443
+          hostPort: 443
+        readinessProbe:
+          tcpSocket:
+            port: 443
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+          - name: nginx-persistent-storage
+            mountPath: /etc/nginx/nginx.conf
+      volumes:
+        - name: nginx-persistent-storage
+          hostPath:
+            path: /mnt/gluster/nginx/nginx.conf
+      imagePullSecrets:
+        - name: docker-hub-secret
+---

@@ -1,0 +1,19 @@
+---
+- name: Reset Kubernetes component
+  shell: "kubeadm reset -f"
+  register: reset_cluster
+
+- name: Init Kubernetes cluster
+  when: reset_cluster is succeeded
+  shell: |
+     kubeadm init --pod-network-cidr {{ pod_network_cidr }} \
+     --token {{ token }} \
+     --apiserver-advertise-address {{ hostvars[groups['k8s_master'][0]].ansible_ssh_host }}
+  register: init_cluster
+
+- name : To start using your cluster, you need to run (as a regular user)
+  shell: "{{ item }}"
+  with_items:
+    - "mkdir -p $HOME/.kube"
+    - "yes | sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
+    - "chown $(id -u):$(id -g) $HOME/.kube/config"

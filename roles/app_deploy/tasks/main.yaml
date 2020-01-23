@@ -1,0 +1,23 @@
+---
+
+- name: Clean doosra-vpc namespace
+  include: cleanup.yaml
+  when: "inventory_hostname in  groups['k8s_master']"
+
+- name: prerequisite app
+  include: prerequisite_deploy.yaml
+  when: "inventory_hostname in  groups['k8s_master']"
+
+- name: Update Manifests
+  include: update_manifests.yaml
+  when: "inventory_hostname in  groups['k8s_master']"
+  tags:
+    - update_manifests
+    - update_app
+    - zero_downtime_app
+
+- name: Perform rolling update
+  include: update_app.yaml
+  when: "inventory_hostname in  groups['k8s_master']"
+  tags:
+    - update_app

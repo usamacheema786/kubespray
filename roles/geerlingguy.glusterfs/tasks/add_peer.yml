@@ -1,0 +1,10 @@
+---
+# Expanding Volume
+
+- name: Probe the new node
+  shell: gluster peer probe {{inventory_hostname}}
+  delegate_to: node-01
+
+- name: Configure Gluster volume.
+  shell: gluster volume add-brick gluster  replica  {{ groups['gluster'] | length }}  {{inventory_hostname}}:/srv/gluster/brick force
+  delegate_to: node-01

@@ -1,0 +1,37 @@
+node-01   ansible_ssh_host=167.71.108.64
+node-02   ansible_ssh_host=167.71.247.254
+node-03   ansible_ssh_host=64.225.0.62
+
+[k8s_master]
+node-01
+
+[k8s_worker]
+node-02
+node-03
+
+[gluster]
+node-01
+node-02
+node-03
+
+[galera_cluster]
+node-01
+node-02
+node-03
+
+[doosra_vpc_k8s_cluster:children]
+k8s_master
+k8s_worker
+
+[doosra_vpc_k8s_cluster:vars]
+VPCPLUS_LINK=https://vpc.wanclouds.net/
+
+#Site env variables for Email logger
+SITE=on bleeding
+
+[all:vars]
+ADD_NODE=false
+PUBLIC_INTERFACE=eth0
+ANSIBLE_PUBLIC_INTERFACE=ansible_{{ PUBLIC_INTERFACE }}
+MYSQL_PASSWORD=d1d5c3ff-95cb-47a7-b5de-9412a707f428
+mariadb_mysql_root_password = {{ MYSQL_PASSWORD }}

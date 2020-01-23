@@ -1,0 +1,26 @@
+---
+- name: Install Docker container engine
+  include: pkg.yaml
+
+- name: Copy Docker engine service file
+  register: change_docker
+  template:
+    src: "docker.service.j2"
+    dest: "{{ systemd_dir }}/docker.service"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy Docker environment config file
+  template: src=docker.j2 dest={{ system_env_dir }}/docker
+
+- name: Add registry to Docker config
+  when: add_registry is defined and add_registry > 0
+  lineinfile: dest={{ system_env_dir }}/docker regexp=^ADD_REGISTRY= line=ADD_REGISTRY="{% for reg in add_registry %}--add-registry={{ reg }} {%endfor %}"
+
+- name: Start the Docker engine
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  register: started_docker

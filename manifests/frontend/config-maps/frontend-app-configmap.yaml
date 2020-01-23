@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-app-configmap
+  namespace: doosra-vpc
+data:
+  BASIC_AUTH: 'no'
+  NODE_ENV: 'production'
+  API_URL: 'http://web:8081/'
+---

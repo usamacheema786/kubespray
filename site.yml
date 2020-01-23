@@ -1,0 +1,52 @@
+---
+- hosts: all
+  roles:
+    - common
+    - hostname
+  tags:
+    - mariadb_cluster
+    - update_app
+
+- hosts: gluster
+  gather_facts: True
+  roles:
+    - geerlingguy.glusterfs
+  tags:
+    - glusterfs
+
+- hosts: galera_cluster
+  roles:
+    - mariadb
+  tags:
+    - mariadb_cluster
+
+- hosts: doosra_vpc_k8s_cluster
+  gather_facts: yes
+  become: yes
+  roles:
+    - { role: k8s_setup/docker, tags: docker }
+
+- hosts: k8s_master
+  gather_facts: yes
+  become: yes
+  roles:
+    - { role: k8s_setup/kubernetes/master, tags: master }
+    - { role: k8s_setup/NetworkPods, tags: cni }
+
+- hosts: k8s_worker
+  gather_facts: yes
+  become: yes
+  roles:
+    - { role: k8s_setup/kubernetes/node, tags: node }
+
+- hosts: all
+  roles:
+    - app_deploy
+  tags:
+    - deploy_app
+
+- hosts: k8s_master
+  roles:
+    - k8s_setup/Labels
+  tags:
+    - labels

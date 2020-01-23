@@ -1,0 +1,15 @@
+---
+- name: Update the apt package index
+  shell: apt-get update
+
+- name: Install commonly required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - git
+    - tig
+    - vim
+    - python3-pip
+    - htop

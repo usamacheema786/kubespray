@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-web-configmap
+  namespace: doosra-vpc
+data:
+  VPCPLUS_LINK: ''
+  GOOGLE_OAUTH_LINK: ''
+
+---

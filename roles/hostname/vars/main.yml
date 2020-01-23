@@ -1,0 +1,8 @@
+---
+
+# To set hostname of a machine.
+# * will be replaced by the string specified in hostgroup
+hostname: "*"
+
+# domain used to create fqdn in /etc/hosts file
+domain: "wanclouds.net"

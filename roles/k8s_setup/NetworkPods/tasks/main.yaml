@@ -1,0 +1,5 @@
+---
+- name: Network pods
+  shell: "{{ item }}"
+  with_items:
+    - kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/canal.yaml

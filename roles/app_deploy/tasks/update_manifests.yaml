@@ -1,0 +1,57 @@
+---
+
+- name: copy doosra-vpc manifests
+  copy:
+    src: "{{ manifest_path }}"
+    dest: "/root/"
+  tags: copy_manifests
+
+- name: Register frontend commit id
+  shell: "source /etc/profile && echo $FRONTEND_COMMIT_ID"
+  args:
+    executable: /bin/bash
+  register: frontend_commit_id
+  delegate_to: 127.0.0.1
+
+- name: Register backend commit id
+  shell: "source /etc/profile && echo $BACKEND_COMMIT_ID"
+  args:
+    executable: /bin/bash
+  register: backend_commit_id
+  delegate_to: 127.0.0.1
+
+
+- name: Updating backend configmaps
+  lineinfile:
+      destfile: "{{ DOOSRA_VPC_MANIFEST }}/backend/config-maps/{{ item.file }}.yaml"
+      regexp: '^(.*){{ item.key }}: (.*)$'
+      line: '\1{{ item.key }}: "{{ item.value  }}"'
+      backrefs: yes
+  with_items:
+    - { key: SITE, value: "{{ SITE }}", file: backend-common-configmap }
+    - { key: GENERATION, value: "{{ GENERATION }}", file: backend-common-configmap }
+    - { key: VPCPLUS_LINK, value: "{{ VPCPLUS_LINK }}", file: backend-web-configmap }
+    - { key: GOOGLE_OAUTH_LINK, value: "{{ GOOGLE_OAUTH_LINK }}", file: backend-web-configmap }
+
+- name: Updating backend deployment manifests
+  lineinfile:
+      destfile: "{{ DOOSRA_VPC_MANIFEST }}/backend/deployment/{{ item.file }}.yaml"
+      regexp: '^(.*){{ item.key }}: (.*)$'
+      line: '\1{{ item.key }}: "{{ item.value  }}"'
+      backrefs: yes
+  with_items:
+    - { key: image, value: "wancloudsinc/doosra-vpc-backend:{{ backend_commit_id.stdout }}", file: backend-emailworker-deployment }
+    - { key: image, value: "wancloudsinc/doosra-vpc-backend:{{ backend_commit_id.stdout }}", file: backend-scheduler-deployment }
+    - { key: image, value: "wancloudsinc/doosra-vpc-backend:{{ backend_commit_id.stdout }}", file: backend-web-deployment }
+    - { key: image, value: "wancloudsinc/doosra-vpc-backend:{{ backend_commit_id.stdout }}", file: backend-worker-deployment }
+
+
+- name: Updating Frontend deployment manifests
+  lineinfile:
+      destfile: "{{ DOOSRA_VPC_MANIFEST }}/frontend/deployment/{{ item.file }}.yaml"
+      regexp: '^(.*){{ item.key }}: (.*)$'
+      line: '\1{{ item.key }}: "{{ item.value  }}"'
+      backrefs: yes
+  with_items:
+    - { key: image, value: "wancloudsinc/doosra-vpc-frontend:{{ frontend_commit_id.stdout }}", file: frontend-app-deployment }
+

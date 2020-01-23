@@ -1,0 +1,14 @@
+---
+
+- name: Assigning label to node-01
+  shell: "kubectl label nodes node-01 master=nginx"
+
+- name: Assigning label to node-02
+  shell: "kubectl label nodes node-02 node=worker-01"
+
+- name: Assigning label to node-03
+  shell: "kubectl label nodes node-03 node=worker-02"
+
+- name: Assign pod scheduling to master
+  shell: "kubectl taint nodes --all node-role.kubernetes.io/master-"
+  ignore_errors: yes

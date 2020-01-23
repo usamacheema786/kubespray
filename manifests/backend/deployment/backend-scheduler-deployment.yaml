@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler
+  namespace: doosra-vpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: scheduler
+    spec:
+      containers:
+      - name:  scheduler
+        image: wancloudsinc/doosra-vpc-backend:latest
+        imagePullPolicy: Always
+        command: ['/doosra-vpc-be/bin/run_scheduler.sh']
+        readinessProbe:
+          exec:
+            command:
+              - cat
+              - '/doosra-vpc-be/bin/run_scheduler.sh'
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        env:
+        - name: RABBIT_ENV_RABBITMQ_USER
+          valueFrom:
+            configMapKeyRef:
+              name: backend-common-configmap
+              key: RABBIT_ENV_RABBITMQ_USER
+        - name: RABBIT_ENV_RABBITMQ_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: backend-common-configmap
+              key: RABBIT_ENV_RABBITMQ_PASSWORD
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-common-configmap
+              key: REDIS_PORT
+        - name: GENERATION
+          valueFrom:
+            configMapKeyRef:
+              name: backend-common-configmap
+              key: GENERATION
+        - name: WEBDB_ENV_MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: backend-db-secret
+              key: WEBDB_ENV_MYSQL_USER
+        - name: WEBDB_ENV_MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backend-db-secret
+              key: WEBDB_ENV_MYSQL_PASSWORD
+        - name: WEBDB_ENV_MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backend-db-secret
+              key: WEBDB_ENV_MYSQL_ROOT_PASSWORD
+        - name: WEBDB_ENV_MYSQL_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: backend-common-configmap
+              key: WEBDB_ENV_MYSQL_DB_HOST
+        - name: WEBDB_ENV_MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: backend-common-configmap
+              key: WEBDB_ENV_MYSQL_DATABASE
+        volumeMounts:
+          - name: scheduler-logs
+            mountPath: /doosra-vpc-be/data/logs/scheduler
+      volumes:
+        - name: scheduler-logs
+          hostPath:
+            path: /mnt/gluster/logs/scheduler
+      imagePullSecrets:
+        - name: docker-hub-secret
+---

@@ -1,0 +1,17 @@
+---
+- name : Remove doosra-vpc namespace
+  command: kubectl delete namespace doosra-vpc
+  ignore_errors: yes
+
+- pause:
+    minutes: 2
+    prompt: "Hold your breath, doosra-vpc namespace will take time to die"
+
+- name: Delete  log folders from gluster vol | update
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /mnt/gluster/logs
+  run_once: true
+  ignore_errors: yes

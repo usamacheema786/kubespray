@@ -1,0 +1,51 @@
+---
+- name: configure_root_access | updating root passwords
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ hostvars[groups['all'][0]]['mariadb_mysql_root_password'] }}"
+    priv: "*.*:ALL,GRANT"
+  run_once: true
+  with_items:
+    - "{{ hostvars[inventory_hostname][hostvars[groups['all'][0]]['ANSIBLE_PUBLIC_INTERFACE']]['ipv4']['address'] }}"
+    - '::1'
+
+- name: configure_root_access | configuring root my.cnf
+  template:
+    src: "root/my.cnf.j2"
+    dest: "/root/.my.cnf"
+    owner: "root"
+    group: "root"
+    mode: "u=rw,g=,o="
+  when: ansible_os_family == "RedHat"
+
+- name: configure_root_access | updating root passwords
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ hostvars[groups['all'][0]]['mariadb_mysql_root_password'] }}"
+    priv: "*.*:ALL,GRANT"
+  with_items:
+    - "{{ hostvars[inventory_hostname][hostvars[groups['all'][0]]['ANSIBLE_PUBLIC_INTERFACE']]['ipv4']['address'] }}"
+    - '::1'
+
+- name: configure_root_access | updating root passwords (allow from anywhere)
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ hostvars[groups['all'][0]]['mariadb_mysql_root_password'] }}"
+    priv: "*.*:ALL,GRANT"
+  with_items:
+    - '10.244.%.%'
+  tags:
+    - web1
+
+
+- name: Create doosra database
+  mysql_db:
+    name: doosradb
+    state: present
+    config_file: /root/.my.cnf
+  when: inventory_hostname==groups['galera_cluster'][0]
+
+

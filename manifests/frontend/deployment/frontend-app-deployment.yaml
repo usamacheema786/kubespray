@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: doosra-vpc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: app
+    spec:
+      containers:
+      - name:  app
+        image: wancloudsinc/doosra-vpc-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        command: ['/opt/app/bin/run_app.sh']
+        readinessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        env:
+        - name: BASIC_AUTH
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-app-configmap
+              key: BASIC_AUTH
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-app-configmap
+              key: NODE_ENV
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-app-configmap
+              key: API_URL
+        - name: VPCPLUS_LINK
+          valueFrom:
+            configMapKeyRef:
+              name: backend-web-configmap
+              key: VPCPLUS_LINK
+      imagePullSecrets:
+        - name: docker-hub-secret
+---

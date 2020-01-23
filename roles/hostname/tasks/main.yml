@@ -1,0 +1,16 @@
+---
+- name: Set hostname
+  hostname: name={{ hostname.replace('*', inventory_hostname) }}
+
+- name: Backup current hostfile
+  copy:
+    src: /etc/hosts
+    dest: /etc/hosts.bak
+
+- name: Generate /etc/hosts.ansible file
+  template:
+    src=hosts.j2
+    dest='/etc/hosts'
+    owner=root
+    group=root
+    mode=0644
