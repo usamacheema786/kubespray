@@ -6,25 +6,6 @@
 #  tags:
 #    - mariadb_cluster
 #    - update_app
-- hosts: localhost
-  gather_facts: false
-  become: no
-  tasks:
-    - name: "Check ansible version >=2.7.8"
-      assert:
-        msg: "Ansible must be v2.7.8 or higher"
-        that:
-          - ansible_version.string is version("2.7.8", ">=")
-      tags:
-        - check
-  vars:
-    ansible_connection: local
-
-- hosts: bastion[0]
-  gather_facts: False
-  roles:
-    - { role: kubespray-defaults}
-    - { role: bastion-ssh-config, tags: ["localhost", "bastion"]}
 
 - hosts: k8s-cluster:etcd
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
@@ -121,22 +102,22 @@
     - { role: kubespray-defaults}
     - { role: kubernetes/preinstall, when: "dns_mode != 'none' and resolvconf_mode == 'host_resolvconf'", tags: resolvconf, dns_late: true }
 
-#- hosts: gluster
-#  gather_facts: True
-#  roles:
-#    - geerlingguy.glusterfs
-#  tags:
-#    - glusterfs
-#
-#- hosts: galera_cluster
-#  roles:
-#    - mariadb
-#  tags:
-#    - mariadb_cluster
-#
-#- hosts: all
-#  roles:
-#    - app_deploy
-#  tags:
-#    - deploy_app
+- hosts: gluster
+  gather_facts: True
+  roles:
+    - geerlingguy.glusterfs
+  tags:
+    - glusterfs
+
+- hosts: galera_cluster
+  roles:
+    - mariadb
+  tags:
+    - mariadb_cluster
+
+- hosts: all
+  roles:
+    - app_deploy
+  tags:
+    - deploy_app
 
