@@ -12,8 +12,8 @@ events {
 stream {
     upstream stream_backend {
       zone tcp_servers 64k;
-      server {{ hostvars[groups['k8s_worker'][0]].ansible_ssh_host }}:3306; # node1
-      server {{ hostvars[groups['k8s_master'][0]].ansible_ssh_host }}:3306 down; # node2
+      server {{ hostvars[groups['kube_node'][2]].ansible_host }}:3306; # node1
+      server {{ hostvars[groups['kube_master'][0]].ansible_host }}:3306 down; # node2
     }
 
     server {

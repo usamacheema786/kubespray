@@ -34,6 +34,18 @@ all:
     calico-rr:
       hosts: {}
 
+    gluster:
+      hosts:
+        node-01:
+        node-02:
+        node-03:
+
+    galera_cluster:
+      hosts:
+        node-01:
+        node-02:
+        node-03:
+
 [all:vars]
 ADD_NODE=false
 PUBLIC_INTERFACE=eth0
