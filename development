@@ -1,6 +1,6 @@
-node-01   ansible_host=10.245.0.61
-node-02   ansible_host=10.245.0.77
-node-03   ansible_host=10.245.0.49
+node-01   ansible_ssh_host=10.245.0.61
+node-02   ansible_ssh_host=10.245.0.77
+node-03   ansible_ssh_host=10.245.0.49
 
 [kubes_master]
 node1
