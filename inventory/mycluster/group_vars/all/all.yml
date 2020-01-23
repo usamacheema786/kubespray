@@ -1,4 +1,10 @@
 ---
+PUBLIC_INTERFACE : eth0
+ANSIBLE_PUBLIC_INTERFACE : ansible_{{ PUBLIC_INTERFACE }}
+MYSQL_PASSWORD : d1d5c3ff-95cb-47a7-b5de-9412a707f428
+mariadb_mysql_root_password : {{ MYSQL_PASSWORD }}
+
+
 kube_version: v1.16.3
 token: 4xepr9.tqwe5xflpqrdqx8b
 
