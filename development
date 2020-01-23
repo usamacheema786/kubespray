@@ -1,29 +1,39 @@
-node-01   ansible_ssh_host=167.71.108.64
-node-02   ansible_ssh_host=167.71.247.254
-node-03   ansible_ssh_host=64.225.0.62
+node-01   ansible_host=10.245.0.61
+node-02   ansible_host=10.245.0.77
+node-03   ansible_host=10.245.0.49
 
-[k8s_master]
-node-01
+[kubes_master]
+node1
+node2
 
-[k8s_worker]
-node-02
-node-03
+[kube-node]
+ndde1
+node2
+node3
+
+[etcd]
+node1
+node2
+node3
+
+[k8s-cluster]
+kube-master
+kube-node
+
+[calico-rr]
 
 [gluster]
-node-01
-node-02
-node-03
+node1
+node2
+node3
 
 [galera_cluster]
-node-01
-node-02
-node-03
+node1
+node2
+node3
 
-[doosra_vpc_k8s_cluster:children]
-k8s_master
-k8s_worker
 
-[doosra_vpc_k8s_cluster:vars]
+[k8s_cluster:vars]
 VPCPLUS_LINK=https://vpc.wanclouds.net/
 
 #Site env variables for Email logger
