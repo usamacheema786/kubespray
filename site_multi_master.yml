@@ -114,9 +114,9 @@
   tags:
     - mariadb_cluster
 
-#- hosts: all
-#  roles:
-#    - app_deploy
-#  tags:
-#    - deploy_app
+- hosts: all
+  roles:
+    - app_deploy
+  tags:
+    - deploy_app
 
