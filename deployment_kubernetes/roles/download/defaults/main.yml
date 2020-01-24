@@ -12,7 +12,7 @@ download_keep_remote_cache: false
 download_force_cache: false
 
 # Used to only evaluate vars from download role
-skip_downloads: false
+skip_downloads: true
 
 # Optionally skip kubeadm images download
 skip_kubeadm_images: false
