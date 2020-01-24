@@ -5,6 +5,8 @@
   tags:
     - mariadb_cluster
     - update_app
+  when: not hostvars[groups['all'][0]]['ADD_NODE'] | bool
+
 #
 #- hosts: k8s-cluster:etcd
 #  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
