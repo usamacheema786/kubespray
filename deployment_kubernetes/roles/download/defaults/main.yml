@@ -1,6 +1,7 @@
 ---
 local_release_dir: /tmp/releases
 download_cache_dir: /tmp/kubespray_cache
+multi_master: False
 
 # do not delete remote cache files after using them
 # NOTE: Setting this parameter to TRUE is only really useful when developing kubespray
@@ -12,7 +13,7 @@ download_keep_remote_cache: false
 download_force_cache: false
 
 # Used to only evaluate vars from download role
-skip_downloads: true
+skip_downloads: false
 
 # Optionally skip kubeadm images download
 skip_kubeadm_images: false
