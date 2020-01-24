@@ -12,7 +12,7 @@
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
   gather_facts: false
   roles:
-    - { role: kubespray-defaults, when: not 'hostvars[groups["all"][0]]["ADD_NODE"]' | bool}
+    - { role: kubespray-defaults, when: "{{ multi_master }}"}
 
 
 #
