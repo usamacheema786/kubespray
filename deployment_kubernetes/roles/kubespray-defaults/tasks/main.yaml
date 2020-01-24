@@ -4,4 +4,4 @@
     msg: "Check roles/kubespray-defaults/defaults/main.yml"
   tags:
     - always
-  when: multi_master is false
+  when: multi_master
