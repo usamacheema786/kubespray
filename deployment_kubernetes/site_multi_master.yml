@@ -77,9 +77,9 @@
 - hosts: kube-master[0]
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
   roles:
-    - { role: kubespray-defaults, when: "hostvars[groups['all'][0]]['ADD_NODE'] | bool"}
-    - { role: kubernetes-apps/rotate_tokens, tags: rotate_tokens, when: "secret_changed|default(false) and hostvars[groups['all'][0]]['ADD_NODE'] | bool" }
-    - { role: win_nodes/kubernetes_patch, tags: ["master", "win_nodes"], when: "hostvars[groups['all'][0]]['ADD_NODE'] | bool"}
+    - { role: kubespray-defaults, when: "not hostvars[groups['all'][0]]['ADD_NODE'] | bool"}
+    - { role: kubernetes-apps/rotate_tokens, tags: rotate_tokens, when: "secret_changed|default(false) and not hostvars[groups['all'][0]]['ADD_NODE'] | bool" }
+    - { role: win_nodes/kubernetes_patch, tags: ["master", "win_nodes"], when: "not hostvars[groups['all'][0]]['ADD_NODE'] | bool"}
 
 #- hosts: kube-master
 #  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
