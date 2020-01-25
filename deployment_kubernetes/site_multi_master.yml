@@ -53,14 +53,13 @@
 #    - { role: kubernetes/node, tags: node }
 #  environment: "{{ proxy_env }}"
 #
-- hosts: kube-master
-  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
-  roles:
-    - { role: kubespray-defaults}
-    - { role: kubernetes/master, tags: master }
-    - { role: kubernetes/client, tags: client }
-    - { role: kubernetes-apps/cluster_roles, tags: cluster-roles }
-    - when: hostvars[groups['all'][0]]['ADD_NODE'] | bool
+#- hosts: kube-master
+#  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+#  roles:
+#    - { role: kubespray-defaults}
+#    - { role: kubernetes/master, tags: master }
+#    - { role: kubernetes/client, tags: client }
+#    - { role: kubernetes-apps/cluster_roles, tags: cluster-roles }
 #- hosts: k8s-cluster
 #  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
 #  roles:
@@ -75,13 +74,13 @@
 #    - { role: kubespray-defaults}
 #    - { role: network_plugin/calico/rr, tags: ['network', 'calico_rr']}
 #
-#- hosts: kube-master[0]
-#  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
-#  roles:
-#    - { role: kubespray-defaults}
-#    - { role: kubernetes-apps/rotate_tokens, tags: rotate_tokens, when: "secret_changed|default(false)" }
-#    - { role: win_nodes/kubernetes_patch, tags: ["master", "win_nodes"]}
-#
+- hosts: kube-master[0]
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  roles:
+    - { role: kubespray-defaults, when: "hostvars[groups['all'][0]]['ADD_NODE'] | bool"}
+    - { role: kubernetes-apps/rotate_tokens, tags: rotate_tokens, when: "secret_changed|default(false) and hostvars[groups['all'][0]]['ADD_NODE'] | bool" }
+    - { role: win_nodes/kubernetes_patch, tags: ["master", "win_nodes"], when: "hostvars[groups['all'][0]]['ADD_NODE'] | bool"}
+
 #- hosts: kube-master
 #  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
 #  roles:
