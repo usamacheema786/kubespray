@@ -1,18 +1,18 @@
 ---
-#- hosts: all
-#  roles:
-#    - hostname
-#  tags:
-#    - mariadb_cluster
-#    - update_app
-#  when: not hostvars[groups['all'][0]]['ADD_NODE'] | bool
-
-
-- hosts: k8s-cluster:etcd
-  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
-  gather_facts: false
+- hosts: all
   roles:
-    - { role: kubespray-defaults, when: "multi_master"}
+    - role: hostname
+      tags:
+        - mariadb_cluster
+        - update_app
+      when: hostvars[groups['all'][0]]['ADD_NODE'] | bool
+
+#
+#- hosts: k8s-cluster:etcd
+#  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+#  gather_facts: false
+#  roles:
+#    - { role: kubespray-defaults, when: "not hostvars[groups['all'][0]]['ADD_NODE'] | bool"}
 
 
 #
