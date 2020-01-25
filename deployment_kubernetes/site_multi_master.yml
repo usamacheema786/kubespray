@@ -60,7 +60,7 @@
     - { role: kubernetes/master, tags: master }
     - { role: kubernetes/client, tags: client }
     - { role: kubernetes-apps/cluster_roles, tags: cluster-roles }
-    when: hostvars[groups['all'][0]]['ADD_NODE'] | bool
+    - when: hostvars[groups['all'][0]]['ADD_NODE'] | bool
 #- hosts: k8s-cluster
 #  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
 #  roles:
